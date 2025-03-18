@@ -2,12 +2,19 @@ import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import FormInput from "../form/formInput.tsx";
 import {FormFieldType} from "../form/constaints.ts";
-import {LoginSchema, TypeLoginSchema} from "../../schema/auth.schema.ts";
+import {LoginSchema, TLoginSchema} from "../../schema/auth.schema.ts";
 import Button from "../common/button.tsx";
+import {useNavigate} from "react-router-dom";
+import {useAppDispatch, useAppSelector} from "../../app/store.ts";
+import {loginUser} from "../../app/features/auth/auth.slice.ts";
+import {LuLoader} from "react-icons/lu";
 
 const Login: React.FC = () => {
+    const {isLoading} = useAppSelector(state => state.auth);
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
 
-    const form = useForm<TypeLoginSchema>({
+    const form = useForm<TLoginSchema>({
         resolver: zodResolver(LoginSchema),
         defaultValues: {
             email: "",
@@ -15,8 +22,8 @@ const Login: React.FC = () => {
         }
     })
 
-    const onSubmit = (data: TypeLoginSchema) => {
-        console.log(data)
+    const onSubmit = (data: TLoginSchema) => {
+        dispatch(loginUser(data))
     }
 
     return (
@@ -29,18 +36,21 @@ const Login: React.FC = () => {
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
                     <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
-                        <FormInput<TypeLoginSchema> FieldType={FormFieldType.INPUT} name="email" label="Email"
-                                                    form={form} placeholder="example@gmail.com"/>
-                        <FormInput<TypeLoginSchema> FieldType={FormFieldType.PASSWORD} name="password" label="Password"
-                                                    form={form} placeholder="********"/>
+                        <FormInput<TLoginSchema> FieldType={FormFieldType.INPUT} name="email" label="Email"
+                                                 form={form} placeholder="example@gmail.com"/>
+                        <FormInput<TLoginSchema> FieldType={FormFieldType.PASSWORD} name="password" label="Password"
+                                                 form={form} placeholder="********"/>
                         <FormInput name={"termsPolicy"} FieldType={FormFieldType.CHECKBOX} form={form}
                                    label={"I agree to the terms and policy"}/>
                         <div className={"space-y-2"}>
                             <Button>
-                                Login
+                                {
+                                    isLoading ? <LuLoader className={"animate-spin"} size={20} /> : "Login"
+                                }
                             </Button>
                             <p className={"w-full flex justify-center"}>Not have any account?
-                                <span className={"text-indigo-600"}>Sign up</span></p>
+                                <span className={"text-indigo-600 cursor-pointer"} onClick={() => navigate("/signup")}>Sign up</span>
+                            </p>
                         </div>
                     </form>
                 </div>
