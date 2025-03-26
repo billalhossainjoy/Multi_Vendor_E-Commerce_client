@@ -3,8 +3,7 @@ import {Outlet} from "react-router-dom";
 
 function AuthLayout() {
     return (
-        <div>
-            auth layout
+        <div className="h-screen">
             <Outlet />
         </div>
     );

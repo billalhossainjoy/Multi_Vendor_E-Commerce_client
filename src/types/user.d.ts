@@ -6,5 +6,6 @@ interface User {
     email: string;
     createdAt: string;
     updatedAt: string;
+    verified: boolean;
 }
 

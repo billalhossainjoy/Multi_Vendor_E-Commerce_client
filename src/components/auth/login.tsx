@@ -42,14 +42,18 @@ const Login: React.FC = () => {
                                                  form={form} placeholder="********"/>
                         <FormInput name={"termsPolicy"} FieldType={FormFieldType.CHECKBOX} form={form}
                                    label={"I agree to the terms and policy"}/>
+
                         <div className={"space-y-2"}>
+                            <div>
+                                <p className="text-sm w-full block text-end underline text-blue-500 cursor-pointer" onClick={() => navigate("/auth/forgotten/new")}>Forgotten password</p>
+                            </div>
                             <Button>
                                 {
                                     isLoading ? <LuLoader className={"animate-spin"} size={20} /> : "Login"
                                 }
                             </Button>
                             <p className={"w-full flex justify-center"}>Not have any account?
-                                <span className={"text-indigo-600 cursor-pointer"} onClick={() => navigate("/signup")}>Sign up</span>
+                                <span className={"text-indigo-600 cursor-pointer"} onClick={() => navigate("/auth/signup")}>Sign up</span>
                             </p>
                         </div>
                     </form>

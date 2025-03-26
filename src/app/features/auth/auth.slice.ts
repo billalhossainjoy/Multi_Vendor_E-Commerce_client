@@ -28,7 +28,7 @@ export const loginUser = createAsyncThunk("/auth/login", async (data: TLoginSche
 
 export const signupUser = createAsyncThunk("/auth/register", async (formData: FormData, thunk) => {
     try {
-        const response = AuthService.register<{data: User}>(formData)
+        const response =await AuthService.register<{data: User}>(formData)
         return thunk.fulfillWithValue(response);
     } catch (error: unknown) {
         if (error instanceof AxiosError) return thunk.rejectWithValue(error.message)
@@ -45,6 +45,7 @@ export const logoutUser = createAsyncThunk("/auth/logout", async (_, thunk) => {
         return thunk.rejectWithValue("Failed to logout.")
     }
 })
+
 export const userRefreshToken = createAsyncThunk("/auth/refresh-token", async (_, thunk) => {
     try {
         const response = AuthService.refreshToken()
@@ -54,6 +55,38 @@ export const userRefreshToken = createAsyncThunk("/auth/refresh-token", async (_
         return thunk.rejectWithValue("Failed to generate refresh token.")
     }
 })
+
+export const userVerification =  createAsyncThunk("/auth/verify", async (token: string, thunk) => {
+    try {
+        const response =await AuthService.verification(token)
+        return thunk.fulfillWithValue(response);
+    } catch (error: unknown) {
+        if (error instanceof AxiosError) return thunk.rejectWithValue(error.message)
+        return thunk.rejectWithValue("Failed to generate refresh token.")
+    }
+})
+
+export const userForgottenPassword =  createAsyncThunk("/auth/forgotten-password", async (email: string, thunk) => {
+    try {
+        const response =await AuthService.forgottenPassword(email)
+        return thunk.fulfillWithValue(response);
+    } catch (error: unknown) {
+        if (error instanceof AxiosError) return thunk.rejectWithValue(error.message)
+        return thunk.rejectWithValue("Failed to generate refresh token.")
+    }
+})
+
+export const userResetPassword =  createAsyncThunk("/auth/change-password", async ({password, token}:{password: string, token: string}, thunk) => {
+    try {
+        const response =await AuthService.ResetPassword(password, token)
+        return thunk.fulfillWithValue(response);
+    } catch (error: unknown) {
+        if (error instanceof AxiosError) return thunk.rejectWithValue(error.message)
+        return thunk.rejectWithValue("Failed to generate refresh token.")
+    }
+})
+
+
 
 
 const authSlice = createSlice({
@@ -118,6 +151,34 @@ const authSlice = createSlice({
                 state.isLoading = false
             }
         ])
+
+        thunkBuilder(builder, userForgottenPassword, [
+            state => {
+                state.isLoading = true
+            },
+            (state) => {
+                state.isLoading = false
+            },
+            (state) => {
+                state.isLoading = false
+            }
+        ])
+
+
+        thunkBuilder(builder, userResetPassword, [
+            state => {
+                state.isLoading = true
+            },
+            (state) => {
+                state.isLoading = false
+            },
+            (state) => {
+                state.isLoading = false
+            }
+        ])
+
+
+
 
 
     }

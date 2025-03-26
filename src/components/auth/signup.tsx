@@ -29,13 +29,13 @@ const SignUp: React.FC = () => {
         const formData = new FormData();
         for (const key in data) {
             const element = data[key as keyof TSignupSchema];
-            if(element !== null ) formData.append(key, String(element))
+            if(element !== null) {
+                if(element instanceof File ) formData.append(key, element);
+                if(typeof element === "string" || typeof element === "number" || typeof element === "boolean") formData.append(key, String(element));
+            }
         }
 
-        dispatch(signupUser(formData)).then((res) => {
-           console.log(res)
-        }).catch((err) => console.log(err));
-
+        dispatch(signupUser(formData))
     }
 
     return (
@@ -63,7 +63,7 @@ const SignUp: React.FC = () => {
                                 {isLoading ? "Loading..." :  "Sign up"}
                             </Button>
                             <p className={"w-full flex justify-center"}>Already and account?
-                                <span className={"text-indigo-600 cursor-pointer"} onClick={() => navigate("/login") }>Login</span></p>
+                                <span className={"text-indigo-600 cursor-pointer"} onClick={() => navigate("/auth/login") }>Login</span></p>
                         </div>
                     </form>
                 </div>

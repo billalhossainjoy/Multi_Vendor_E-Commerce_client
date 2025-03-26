@@ -1,14 +1,15 @@
-import {useAppSelector} from "./app/store.ts";
-import {Loader} from "./components/common/loader.tsx";
+import {useAppSelector} from "../app/store.ts";
+import {Loader} from "../components/common/loader.tsx";
 import {Navigate, useLocation} from "react-router-dom";
 import React from "react";
+import {startsWithAny} from "../utils";
 
 type Props = {
     children: React.ReactNode;
 };
 
 function Protected({children}: Props) {
-    const {isLoading} = useAppSelector(state => state.user);
+    const {isLoading, user} = useAppSelector(state => state.user);
     const {isAuthenticated} = useAppSelector(state => state.auth);
     const {pathname} = useLocation()
 
@@ -17,8 +18,22 @@ function Protected({children}: Props) {
     }
 
     if(pathname.startsWith("/auth") ){
-        if(isAuthenticated) {
-            return <Navigate to={"/store"} />;
+        if(isAuthenticated){
+            if(pathname.startsWith("/auth/verify")){
+                if(user?.verified) {
+                    return <Navigate to={"/store"} />
+                }
+
+            }
+            if(startsWithAny(pathname,["/auth/login", "/auth/register", "/auth/forgotten"])) {
+                console.log('execute')
+                return <Navigate to={"/store"} />;
+            }
+        }
+        if(!isAuthenticated) {
+            if(startsWithAny(pathname,["/auth/verify"])) {
+                return <Navigate to={"/store"} />;
+            }
         }
     }
 

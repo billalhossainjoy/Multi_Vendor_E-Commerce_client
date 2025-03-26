@@ -7,7 +7,9 @@ import AuthLayout from "./layouts/auth.layaout.tsx";
 import LoginPage from "./pages/auth/login.tsx";
 import SignUpPage from "./pages/auth/signup.tsx";
 import VendorLayout from "./layouts/vendor.layout.tsx";
-import Protected from "./protected.tsx";
+import Protected from "./middlewares/protected.tsx";
+import VerifyPage from "./pages/auth/verify.tsx";
+import ForgottenPasswordPage from "./pages/auth/forgotten-password.tsx";
 
 
 export function Router() {
@@ -33,7 +35,11 @@ export function Router() {
                 <Route index element={<Navigate to={"/auth/login"} replace />} />
 
                 <Route path={"login"} index element={<LoginPage />}/>
-                <Route path={"signup"} element={<SignUpPage />}/>
+                <Route path={"signup"} element={<SignUpPage />} />
+                <Route path={"forgotten/new"} element={<ForgottenPasswordPage />} />
+                <Route path={"forgotten/token/:token"} element={<ForgottenPasswordPage />} />
+
+                <Route path={"verify/:token"} element={<VerifyPage />} />
             </Route >
 
             <Route path="/vendor" element={<><VendorLayout /></>}>
